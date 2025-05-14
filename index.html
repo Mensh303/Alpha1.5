@@ -103,7 +103,6 @@
       display: none;
     }
 
-    /* Typing animation styles */
     .system-info {
       text-align: left;
       margin: 20px 0;
@@ -115,20 +114,13 @@
       white-space: nowrap;
       margin: 10px 0;
       opacity: 0;
-      border-right: 2px solid #ff4444;
       animation: 
-        typing 3s steps(40, end) forwards,
-        blink-caret 0.75s step-end infinite;
+        typing 3s steps(40, end) forwards;
     }
 
     @keyframes typing {
       from { width: 0; opacity: 1; }
       to { width: 100%; opacity: 1; }
-    }
-
-    @keyframes blink-caret {
-      from, to { border-right-color: transparent; }
-      50% { border-right-color: #ff4444; }
     }
   </style>
 </head>
@@ -162,7 +154,6 @@
     const responseContainer = document.getElementById('response-container');
     const lastMessage = document.querySelector('.typewriter:last-child');
 
-    // Show input after animations complete
     lastMessage.addEventListener('animationend', () => {
       mainInput.classList.remove('hidden');
       mainInput.focus();
@@ -174,7 +165,6 @@
         if (input) {
           responseContainer.innerHTML += `<div>> ${input}</div>`;
           mainInput.value = '';
-          // We'll add more functionality here in next layers
         }
       }
     });
