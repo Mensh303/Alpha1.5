@@ -46,25 +46,6 @@
       text-shadow: 2px 2px #800000;
     }
 
-    #main-input {
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid #ff0000;
-      color: #ff4444;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1.1em;
-      text-align: center;
-      width: 300px;
-      padding: 5px;
-      caret-color: #ff0000;
-      animation: blink 1s infinite;
-      margin-top: 30px;
-    }
-
-    #main-input:focus {
-      outline: none;
-    }
-
     .static {
       position: absolute;
       top: 0;
@@ -86,20 +67,18 @@
       100% { transform: translateX(0); text-shadow: 0 0 #ff0066, 0 0 #660000; }
     }
 
-    @keyframes blink {
-      0% { border-bottom-color: transparent; }
-      50% { border-bottom-color: #ff0000; }
-      100% { border-bottom-color: transparent; }
-    }
-
-    .hidden {
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 30px;
       display: none;
     }
 
-    .system-info {
-      text-align: left;
-      margin: 20px 0;
-      min-height: 100px;
+    .active-screen {
+      display: block;
     }
 
     .typewriter {
@@ -107,8 +86,7 @@
       white-space: nowrap;
       margin: 10px 0;
       opacity: 0;
-      animation: 
-        typing 3s steps(40, end) forwards;
+      animation: typing 3s steps(40, end) forwards;
     }
 
     @keyframes typing {
@@ -116,11 +94,23 @@
       to { width: 100%; opacity: 1; }
     }
 
-    .name-required {
-      font-size: 1.5em;
+    input {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #ff4444;
+      color: #ff4444;
+      font-family: 'Share Tech Mono', monospace;
       text-align: center;
-      margin: 20px 0;
-      display: none;
+      width: 300px;
+      padding: 5px;
+      caret-color: #ff4444;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0% { border-bottom-color: transparent; }
+      50% { border-bottom-color: #ff0000; }
+      100% { border-bottom-color: transparent; }
     }
 
     .processing-container {
@@ -128,8 +118,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      margin: 20px 0;
-      display: none;
+      height: 100%;
     }
 
     .spinner {
@@ -137,22 +126,15 @@
       font-weight: bold;
     }
 
-    .welcome-screen {
-      text-align: center;
+    .name-required {
+      font-size: 1.5em;
+      margin: 20px 0;
       display: none;
     }
 
-    .secondary-prompt {
-      color: #ff4444;
-      margin-top: 30px;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid #ff4444;
-      text-align: center;
-      width: 300px;
-      padding: 5px;
-      caret-color: #ff4444;
-      animation: blink 1s infinite;
+    .welcome-message {
+      margin-top: 20%;
+      font-size: 1.5em;
     }
   </style>
 </head>
@@ -161,25 +143,33 @@
   <div class="version-glitch">Beta_build2.0</div>
 
   <div class="terminal">
-    <div class="system-info">
-      <div class="typewriter" style="animation-delay: 0s">build: alpha1.7</div>
-      <div class="typewriter" style="animation-delay: 3s">name: test2</div>
-      <div class="typewriter" style="animation-delay: 6s">serial: 223994467</div>
-      <div class="typewriter" style="animation-delay: 9s">name: ???</div>
-    </div>
-    
-    <div class="name-required">NAME REQUIRED</div>
-    <input type="text" id="main-input" class="hidden">
-    
-    <div class="processing-container">
-      <span>PROCESSING</span>
-      <span class="spinner"></span>
+    <!-- Initial Screen -->
+    <div class="screen active-screen" id="initial-screen">
+      <div class="system-info">
+        <div class="typewriter" style="animation-delay: 0s">build: alpha1.7</div>
+        <div class="typewriter" style="animation-delay: 3s">name: test2</div>
+        <div class="typewriter" style="animation-delay: 6s">serial: 223994467</div>
+        <div class="typewriter" style="animation-delay: 9s">name: ???</div>
+      </div>
+      <div class="name-required">NAME REQUIRED</div>
+      <input type="text" id="main-input" class="hidden">
     </div>
 
-    <div class="welcome-screen">
-      <div>WELCOME BACK <span id="username-display"></span></div>
-      <div style="margin-top: 10px;">READY FOR ANOTHER TEST</div>
-      <input type="text" class="secondary-prompt" id="secondary-input">
+    <!-- Processing Screen -->
+    <div class="screen" id="processing-screen">
+      <div class="processing-container">
+        <span>PROCESSING</span>
+        <span class="spinner"></span>
+      </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div class="screen" id="welcome-screen">
+      <div class="welcome-message">
+        <div>WELCOME BACK <span id="username-display"></span></div>
+        <div style="margin-top: 20px;">READY FOR ANOTHER TEST</div>
+        <input type="text" id="secondary-input" style="margin-top: 30px;">
+      </div>
     </div>
   </div>
 
@@ -189,35 +179,35 @@
     });
 
     document.onkeydown = function(e) {
-      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.keyCode == 74) || (e.ctrlKey && e.keyCode == 85)) {
+      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || 
+          (e.ctrlKey && e.shiftKey && e.keyCode == 74) || (e.ctrlKey && e.keyCode == 85)) {
         return false;
       }
     };
 
+    const screens = {
+      initial: document.getElementById('initial-screen'),
+      processing: document.getElementById('processing-screen'),
+      welcome: document.getElementById('welcome-screen')
+    };
     const mainInput = document.getElementById('main-input');
-    const nameRequired = document.querySelector('.name-required');
-    const processingContainer = document.querySelector('.processing-container');
-    const welcomeScreen = document.querySelector('.welcome-screen');
-    const lastSystemMessage = document.querySelector('.system-info .typewriter:last-child');
+    const lastTypewriter = document.querySelector('.typewriter:last-child');
 
-    // Show name required and input after system messages
-    lastSystemMessage.addEventListener('animationend', () => {
-      nameRequired.style.display = 'block';
+    // Show name input after initial messages
+    lastTypewriter.addEventListener('animationend', () => {
+      document.querySelector('.name-required').style.display = 'block';
       mainInput.classList.remove('hidden');
       mainInput.focus();
     });
 
-    // Handle main input submission
+    // Handle main input
     mainInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         const username = mainInput.value.trim();
         if (username) {
-          // Hide previous elements
-          nameRequired.style.display = 'none';
-          mainInput.classList.add('hidden');
-          
-          // Show processing
-          processingContainer.style.display = 'flex';
+          // Switch to processing screen
+          screens.initial.classList.remove('active-screen');
+          screens.processing.classList.add('active-screen');
           
           // Start spinner animation
           const spinnerFrames = ['\\', '/', '-', '|'];
@@ -228,12 +218,12 @@
             frame = (frame + 1) % spinnerFrames.length;
           }, 150);
 
-          // After 3 seconds show welcome screen
+          // Switch to welcome screen after 3 seconds
           setTimeout(() => {
             clearInterval(spinnerInterval);
-            processingContainer.style.display = 'none';
+            screens.processing.classList.remove('active-screen');
+            screens.welcome.classList.add('active-screen');
             document.getElementById('username-display').textContent = username.toUpperCase();
-            welcomeScreen.style.display = 'block';
             document.getElementById('secondary-input').focus();
           }, 3000);
         }
