@@ -5,34 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NEW BUILD</title>
   <style>
-    /* Add these new styles */
-    .system-info {
-      text-align: left;
-      margin: 20px 0;
-      min-height: 100px;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-    .typewriter {
+    body {
+      margin: 0;
+      background-color: #0a0000;
+      color: #ff4444;
+      font-family: 'Share Tech Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       overflow: hidden;
-      white-space: nowrap;
-      margin: 10px 0;
-      opacity: 0;
-      animation: 
-        typing 3s steps(40, end) forwards,
-        blink-caret 0.75s step-end infinite;
+      position: relative;
     }
 
-    @keyframes typing {
-      from { width: 0; opacity: 1; }
-      to { width: 100%; opacity: 1; }
-    }
-
-    @keyframes blink-caret {
-      from, to { border-right-color: transparent; }
-      50% { border-right-color: #ff4444; }
-    }
-
-    /* Modified existing styles */
     .terminal {
       background: rgba(0, 0, 0, 0.9);
       padding: 30px;
@@ -47,8 +35,100 @@
       position: relative;
     }
 
+    .version-glitch {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: #ff0000;
+      animation: glitch 1s infinite;
+      opacity: 0.8;
+      font-size: 0.9em;
+      text-shadow: 2px 2px #800000;
+    }
+
+    .input-prompt {
+      color: #ff0000;
+      font-size: 1.5em;
+      margin: 20px 0;
+      text-shadow: 0 0 10px rgba(255,0,0,0.5);
+    }
+
     #main-input {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #ff0000;
+      color: #ff4444;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.1em;
+      text-align: center;
+      width: 300px;
+      padding: 5px;
+      caret-color: #ff0000;
+      animation: blink 1s infinite;
       margin-top: 30px;
+    }
+
+    #main-input:focus {
+      outline: none;
+    }
+
+    .static {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+          url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') repeat,
+          linear-gradient(0deg, rgba(255,0,0,0.1) 0%, rgba(255,0,0,0.3) 100%);
+      mix-blend-mode: screen;
+      opacity: 0.1;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes glitch {
+      0% { transform: translateX(0); text-shadow: 0 0 #ff0066, 0 0 #660000; }
+      50% { transform: translateX(-3px); text-shadow: -3px 0 #ff0066, 3px 0 #660000; }
+      100% { transform: translateX(0); text-shadow: 0 0 #ff0066, 0 0 #660000; }
+    }
+
+    @keyframes blink {
+      0% { border-bottom-color: transparent; }
+      50% { border-bottom-color: #ff0000; }
+      100% { border-bottom-color: transparent; }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Typing animation styles */
+    .system-info {
+      text-align: left;
+      margin: 20px 0;
+      min-height: 100px;
+    }
+
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      margin: 10px 0;
+      opacity: 0;
+      border-right: 2px solid #ff4444;
+      animation: 
+        typing 3s steps(40, end) forwards,
+        blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; opacity: 1; }
+      to { width: 100%; opacity: 1; }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-right-color: transparent; }
+      50% { border-right-color: #ff4444; }
     }
   </style>
 </head>
@@ -68,23 +148,33 @@
   </div>
 
   <script>
-    // Add animation end listener
-    const lastMessage = document.querySelector('.typewriter:last-child');
-    const mainInput = document.getElementById('main-input');
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
 
+    document.onkeydown = function(e) {
+      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.keyCode == 74) || (e.ctrlKey && e.keyCode == 85)) {
+        return false;
+      }
+    };
+
+    const mainInput = document.getElementById('main-input');
+    const responseContainer = document.getElementById('response-container');
+    const lastMessage = document.querySelector('.typewriter:last-child');
+
+    // Show input after animations complete
     lastMessage.addEventListener('animationend', () => {
       mainInput.classList.remove('hidden');
       mainInput.focus();
     });
 
-    // Modified input handler
     mainInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         const input = mainInput.value.trim();
         if (input) {
           responseContainer.innerHTML += `<div>> ${input}</div>`;
           mainInput.value = '';
-          // We'll add more functionality here later
+          // We'll add more functionality here in next layers
         }
       }
     });
