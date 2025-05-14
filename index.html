@@ -116,12 +116,20 @@
       to { width: 100%; opacity: 1; }
     }
 
+    .name-required {
+      font-size: 1.5em;
+      text-align: center;
+      margin: 20px 0;
+      display: none;
+    }
+
     .processing-container {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       margin: 20px 0;
+      display: none;
     }
 
     .spinner {
@@ -129,9 +137,9 @@
       font-weight: bold;
     }
 
-    .welcome-message {
+    .welcome-screen {
       text-align: center;
-      margin: 20px 0;
+      display: none;
     }
 
     .secondary-prompt {
@@ -158,10 +166,21 @@
       <div class="typewriter" style="animation-delay: 3s">name: test2</div>
       <div class="typewriter" style="animation-delay: 6s">serial: 223994467</div>
       <div class="typewriter" style="animation-delay: 9s">name: ???</div>
-      <div class="typewriter" style="animation-delay: 12s">name required</div>
     </div>
+    
+    <div class="name-required">NAME REQUIRED</div>
     <input type="text" id="main-input" class="hidden">
-    <div id="response-container"></div>
+    
+    <div class="processing-container">
+      <span>PROCESSING</span>
+      <span class="spinner"></span>
+    </div>
+
+    <div class="welcome-screen">
+      <div>WELCOME BACK <span id="username-display"></span></div>
+      <div style="margin-top: 10px;">READY FOR ANOTHER TEST</div>
+      <input type="text" class="secondary-prompt" id="secondary-input">
+    </div>
   </div>
 
   <script>
@@ -176,53 +195,46 @@
     };
 
     const mainInput = document.getElementById('main-input');
-    const responseContainer = document.getElementById('response-container');
-    const lastMessage = document.querySelector('.typewriter:last-child');
-    let currentUserName = '';
+    const nameRequired = document.querySelector('.name-required');
+    const processingContainer = document.querySelector('.processing-container');
+    const welcomeScreen = document.querySelector('.welcome-screen');
+    const lastSystemMessage = document.querySelector('.system-info .typewriter:last-child');
 
-    lastMessage.addEventListener('animationend', () => {
+    // Show name required and input after system messages
+    lastSystemMessage.addEventListener('animationend', () => {
+      nameRequired.style.display = 'block';
       mainInput.classList.remove('hidden');
       mainInput.focus();
     });
 
+    // Handle main input submission
     mainInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
-        const input = mainInput.value.trim();
-        if (input) {
-          currentUserName = input;
+        const username = mainInput.value.trim();
+        if (username) {
+          // Hide previous elements
+          nameRequired.style.display = 'none';
           mainInput.classList.add('hidden');
           
           // Show processing
-          responseContainer.innerHTML = `
-            <div class="processing-container">
-              <span style="color: #ff4444">Processing</span>
-              <span class="spinner"></span>
-            </div>
-          `;
-
-          // Fast spinner animation
+          processingContainer.style.display = 'flex';
+          
+          // Start spinner animation
           const spinnerFrames = ['\\', '/', '-', '|'];
           let frame = 0;
-          const spinnerEl = responseContainer.querySelector('.spinner');
+          const spinner = document.querySelector('.spinner');
           const spinnerInterval = setInterval(() => {
-            spinnerEl.textContent = spinnerFrames[frame];
+            spinner.textContent = spinnerFrames[frame];
             frame = (frame + 1) % spinnerFrames.length;
           }, 150);
 
+          // After 3 seconds show welcome screen
           setTimeout(() => {
             clearInterval(spinnerInterval);
-            // Show welcome message
-            responseContainer.innerHTML = `
-              <div class="welcome-message">
-                <div>WELCOME BACK ${currentUserName.toUpperCase()}</div>
-                <div style="margin-top: 10px;">READY FOR ANOTHER TEST</div>
-                <input type="text" id="secondary-input" class="secondary-prompt">
-              </div>
-            `;
-            
-            // Focus on new input
-            const secondaryInput = document.getElementById('secondary-input');
-            secondaryInput.focus();
+            processingContainer.style.display = 'none';
+            document.getElementById('username-display').textContent = username.toUpperCase();
+            welcomeScreen.style.display = 'block';
+            document.getElementById('secondary-input').focus();
           }, 3000);
         }
       }
