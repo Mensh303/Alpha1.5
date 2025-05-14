@@ -46,13 +46,6 @@
       text-shadow: 2px 2px #800000;
     }
 
-    .input-prompt {
-      color: #ff0000;
-      font-size: 1.5em;
-      margin: 20px 0;
-      text-shadow: 0 0 10px rgba(255,0,0,0.5);
-    }
-
     #main-input {
       background: transparent;
       border: none;
@@ -122,6 +115,37 @@
       from { width: 0; opacity: 1; }
       to { width: 100%; opacity: 1; }
     }
+
+    .processing-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .spinner {
+      color: #ff4444;
+      font-weight: bold;
+    }
+
+    .welcome-message {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .secondary-prompt {
+      color: #ff4444;
+      margin-top: 30px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #ff4444;
+      text-align: center;
+      width: 300px;
+      padding: 5px;
+      caret-color: #ff4444;
+      animation: blink 1s infinite;
+    }
   </style>
 </head>
 <body>
@@ -133,7 +157,8 @@
       <div class="typewriter" style="animation-delay: 0s">build: alpha1.7</div>
       <div class="typewriter" style="animation-delay: 3s">name: test2</div>
       <div class="typewriter" style="animation-delay: 6s">serial: 223994467</div>
-      <div class="typewriter" style="animation-delay: 9s">name: required</div>
+      <div class="typewriter" style="animation-delay: 9s">name: ???</div>
+      <div class="typewriter" style="animation-delay: 12s">name required</div>
     </div>
     <input type="text" id="main-input" class="hidden">
     <div id="response-container"></div>
@@ -153,6 +178,7 @@
     const mainInput = document.getElementById('main-input');
     const responseContainer = document.getElementById('response-container');
     const lastMessage = document.querySelector('.typewriter:last-child');
+    let currentUserName = '';
 
     lastMessage.addEventListener('animationend', () => {
       mainInput.classList.remove('hidden');
@@ -163,8 +189,41 @@
       if (e.key === 'Enter') {
         const input = mainInput.value.trim();
         if (input) {
-          responseContainer.innerHTML += `<div>> ${input}</div>`;
-          mainInput.value = '';
+          currentUserName = input;
+          mainInput.classList.add('hidden');
+          
+          // Show processing
+          responseContainer.innerHTML = `
+            <div class="processing-container">
+              <span style="color: #ff4444">Processing</span>
+              <span class="spinner"></span>
+            </div>
+          `;
+
+          // Fast spinner animation
+          const spinnerFrames = ['\\', '/', '-', '|'];
+          let frame = 0;
+          const spinnerEl = responseContainer.querySelector('.spinner');
+          const spinnerInterval = setInterval(() => {
+            spinnerEl.textContent = spinnerFrames[frame];
+            frame = (frame + 1) % spinnerFrames.length;
+          }, 150);
+
+          setTimeout(() => {
+            clearInterval(spinnerInterval);
+            // Show welcome message
+            responseContainer.innerHTML = `
+              <div class="welcome-message">
+                <div>WELCOME BACK ${currentUserName.toUpperCase()}</div>
+                <div style="margin-top: 10px;">READY FOR ANOTHER TEST</div>
+                <input type="text" id="secondary-input" class="secondary-prompt">
+              </div>
+            `;
+            
+            // Focus on new input
+            const secondaryInput = document.getElementById('secondary-input');
+            secondaryInput.focus();
+          }, 3000);
         }
       }
     });
