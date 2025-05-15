@@ -84,6 +84,10 @@
             50% { border-bottom-color: transparent; }
         }
 
+        ::placeholder {
+            color: transparent;
+        }
+
         .processing-screen {
             position: absolute;
             top: 0;
@@ -125,7 +129,7 @@
         <div class="auth-screen" id="auth-screen">
             <div class="name-required">NAME REQUIRED</div>
             <div class="input-prompt">
-                <input type="text" id="name-input" placeholder=">" autofocus>
+                <input type="text" id="name-input" autofocus>
             </div>
         </div>
 
@@ -141,7 +145,7 @@
                 WELCOME BACK <span id="username-display"></span>
             </div>
             <div class="secondary-prompt">
-                <input type="text" id="command-input" placeholder=">">
+                <input type="text" id="command-input">
             </div>
         </div>
     </div>
