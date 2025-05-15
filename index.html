@@ -16,8 +16,8 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh; /* Fix applied */
+      overflow-x: hidden; /* Allow vertical scroll, restrict horizontal */
       position: relative;
     }
 
@@ -193,23 +193,19 @@
     const mainInput = document.getElementById('main-input');
     const lastTypewriter = document.querySelector('.typewriter:last-child');
 
-    // Show name input after initial messages
     lastTypewriter.addEventListener('animationend', () => {
       document.querySelector('.name-required').style.display = 'block';
       mainInput.classList.remove('hidden');
       mainInput.focus();
     });
 
-    // Handle main input
     mainInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         const username = mainInput.value.trim();
         if (username) {
-          // Switch to processing screen
           screens.initial.classList.remove('active-screen');
           screens.processing.classList.add('active-screen');
           
-          // Start spinner animation
           const spinnerFrames = ['\\', '/', '-', '|'];
           let frame = 0;
           const spinner = document.querySelector('.spinner');
@@ -218,7 +214,6 @@
             frame = (frame + 1) % spinnerFrames.length;
           }, 150);
 
-          // Switch to welcome screen after 3 seconds
           setTimeout(() => {
             clearInterval(spinnerInterval);
             screens.processing.classList.remove('active-screen');
