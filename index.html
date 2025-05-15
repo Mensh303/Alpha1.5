@@ -46,13 +46,6 @@
       text-shadow: 2px 2px #800000;
     }
 
-    .input-prompt {
-      color: #ff0000;
-      font-size: 1.5em;
-      margin: 20px 0;
-      text-shadow: 0 0 10px rgba(255,0,0,0.5);
-    }
-
     #main-input {
       background: transparent;
       border: none;
@@ -128,6 +121,7 @@
       animation: glitch 1s infinite;
       opacity: 0;
       transition: opacity 0.5s;
+      display: block;
     }
 
     .name-required-message.visible {
@@ -170,10 +164,12 @@
     const mainInput = document.getElementById('main-input');
     const responseContainer = document.getElementById('response-container');
     const lastMessage = document.querySelector('.typewriter:last-child');
+    const nameRequiredMessage = document.querySelector('.name-required-message');
 
     lastMessage.addEventListener('animationend', () => {
       mainInput.classList.remove('hidden');
-      document.querySelector('.name-required-message').classList.add('visible');
+      nameRequiredMessage.classList.remove('hidden');
+      nameRequiredMessage.classList.add('visible');
       mainInput.focus();
     });
 
