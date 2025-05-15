@@ -118,6 +118,22 @@
         typing 3s steps(40, end) forwards;
     }
 
+    .name-required-message {
+      color: #ff0000;
+      font-size: 2.5em;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      text-shadow: 0 0 20px rgba(255,0,0,0.7);
+      margin: 20px 0;
+      animation: glitch 1s infinite;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .name-required-message.visible {
+      opacity: 1;
+    }
+
     @keyframes typing {
       from { width: 0; opacity: 1; }
       to { width: 100%; opacity: 1; }
@@ -133,8 +149,9 @@
       <div class="typewriter" style="animation-delay: 0s">build: alpha1.7</div>
       <div class="typewriter" style="animation-delay: 3s">name: test2</div>
       <div class="typewriter" style="animation-delay: 6s">serial: 223994467</div>
-      <div class="typewriter" style="animation-delay: 9s">name: required</div>
+      <div class="typewriter" style="animation-delay: 9s">name: ???</div>
     </div>
+    <div class="name-required-message hidden">NAME REQUIRED</div>
     <input type="text" id="main-input" class="hidden">
     <div id="response-container"></div>
   </div>
@@ -156,6 +173,7 @@
 
     lastMessage.addEventListener('animationend', () => {
       mainInput.classList.remove('hidden');
+      document.querySelector('.name-required-message').classList.add('visible');
       mainInput.focus();
     });
 
