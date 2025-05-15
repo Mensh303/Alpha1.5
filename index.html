@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GLITCH SYSTEM</title>
+    <title>IDENTITY VERIFICATION</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
@@ -49,39 +49,17 @@
             position: relative;
         }
 
-        .system-messages {
+        .auth-screen {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .name-required {
+            font-size: 1.5em;
+            color: #ff4444;
+            text-shadow: 0 0 10px rgba(255,0,0,0.5);
             margin-bottom: 2rem;
-        }
-
-        .glitch-text {
             animation: glitch 2s infinite;
-            text-shadow: 2px 2px #800000;
-        }
-
-        .typing-container {
-            overflow: hidden;
-            white-space: nowrap;
-            margin: 1rem 0;
-        }
-
-        .typing-effect {
-            display: inline-block;
-            animation: typing 3s steps(40, end) forwards;
-            opacity: 0;
-        }
-
-        @keyframes typing {
-            from { width: 0; opacity: 1; }
-            to { width: 100%; opacity: 1; }
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
         }
 
         .input-prompt {
@@ -91,7 +69,7 @@
             display: inline-block;
         }
 
-        #user-input {
+        input {
             background: transparent;
             border: none;
             color: #ff4444;
@@ -129,31 +107,59 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .welcome-screen {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .welcome-message {
+            font-size: 1.5em;
+            margin-bottom: 2rem;
+            animation: glitch 2s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .secondary-prompt {
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
     <div class="glitch-overlay"></div>
     
     <div class="terminal">
-        <div class="system-messages">
-            <div class="typing-container">
-                <div class="typing-effect glitch-text" style="animation-delay: 0s">INITIALIZING SYSTEM...</div>
-            </div>
-            <div class="typing-container">
-                <div class="typing-effect glitch-text" style="animation-delay: 1.5s">CONNECTING TO NETWORK...</div>
-            </div>
-            <div class="typing-container">
-                <div class="typing-effect glitch-text" style="animation-delay: 3s">ACCESS CODE: ********</div>
+        <!-- Initial Auth Screen -->
+        <div class="auth-screen" id="auth-screen">
+            <div class="name-required">NAME REQUIRED</div>
+            <div class="input-prompt">
+                <input type="text" id="name-input" placeholder="ENTER YOUR NAME" autofocus>
             </div>
         </div>
 
-        <div class="input-prompt">
-            <input type="text" id="user-input" placeholder="ENTER ACCESS ID">
-        </div>
-
-        <div class="processing-screen" id="processing">
-            <div class="glitch-text">AUTHENTICATING</div>
+        <!-- Processing Screen -->
+        <div class="processing-screen" id="processing-screen">
+            <div class="glitch-text">VERIFYING IDENTITY</div>
             <div class="spinner">|</div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcome-screen">
+            <div class="welcome-message">
+                WELCOME BACK <span id="username-display"></span>
+            </div>
+            <div class="secondary-prompt">
+                <input type="text" id="command-input" placeholder="ENTER COMMAND">
+            </div>
         </div>
     </div>
 
@@ -166,20 +172,23 @@
             }
         };
 
-        const userInput = document.getElementById('user-input');
-        const processingScreen = document.getElementById('processing');
+        const authScreen = document.getElementById('auth-screen');
+        const processingScreen = document.getElementById('processing-screen');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const nameInput = document.getElementById('name-input');
+        const usernameDisplay = document.getElementById('username-display');
+        const commandInput = document.getElementById('command-input');
         const spinner = document.querySelector('.spinner');
         const spinnerChars = ['|', '/', '-', '\\'];
         let spinnerIndex = 0;
 
-        // Handle input submission
-        userInput.addEventListener('keypress', (e) => {
+        nameInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                const input = userInput.value.trim();
-                if (input) {
-                    // Show processing screen
+                const userName = nameInput.value.trim();
+                if (userName) {
+                    // Switch to processing screen
+                    authScreen.style.display = 'none';
                     processingScreen.style.display = 'flex';
-                    userInput.style.display = 'none';
                     
                     // Start spinner animation
                     const spinnerInterval = setInterval(() => {
@@ -187,11 +196,13 @@
                         spinner.textContent = spinnerChars[spinnerIndex];
                     }, 100);
 
-                    // Simulate processing delay
+                    // Simulate processing and show welcome screen
                     setTimeout(() => {
                         clearInterval(spinnerInterval);
                         processingScreen.style.display = 'none';
-                        // Add your next screen logic here
+                        welcomeScreen.style.display = 'block';
+                        usernameDisplay.textContent = userName.toUpperCase();
+                        commandInput.focus();
                     }, 3000);
                 }
             }
