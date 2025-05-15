@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NEW BUILD</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
@@ -16,7 +16,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
       overflow: hidden;
       position: relative;
     }
@@ -27,11 +27,11 @@
       border: 2px solid #ff0000;
       width: 80%;
       max-width: 600px;
-      box-shadow: 0 0 20px rgba(255,0,0,0.3);
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
       text-align: center;
       font-size: 1.2em;
-      overflow-y: hidden; /* Fixed scroll bar */
-      max-height: none;   /* Allow natural height */
+      overflow-y: auto;
+      max-height: 80vh;
       position: relative;
     }
 
@@ -46,6 +46,25 @@
       text-shadow: 2px 2px #800000;
     }
 
+    #main-input {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #ff0000;
+      color: #ff4444;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.1em;
+      text-align: center;
+      width: 300px;
+      padding: 5px;
+      caret-color: #ff0000;
+      animation: blink 1s infinite;
+      margin-top: 15px;
+    }
+
+    #main-input:focus {
+      outline: none;
+    }
+
     .static {
       position: absolute;
       top: 0;
@@ -53,8 +72,8 @@
       width: 100%;
       height: 100%;
       background: 
-          url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') repeat,
-          linear-gradient(0deg, rgba(255,0,0,0.1) 0%, rgba(255,0,0,0.3) 100%);
+        url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') repeat,
+        linear-gradient(0deg, rgba(255,0,0,0.1) 0%, rgba(255,0,0,0.3) 100%);
       mix-blend-mode: screen;
       opacity: 0.1;
       pointer-events: none;
@@ -67,18 +86,20 @@
       100% { transform: translateX(0); text-shadow: 0 0 #ff0066, 0 0 #660000; }
     }
 
-    .screen {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding: 30px;
+    @keyframes blink {
+      0% { border-bottom-color: transparent; }
+      50% { border-bottom-color: #ff0000; }
+      100% { border-bottom-color: transparent; }
+    }
+
+    .hidden {
       display: none;
     }
 
-    .active-screen {
-      display: block;
+    .system-info {
+      text-align: left;
+      margin: 20px 0;
+      min-height: 100px;
     }
 
     .typewriter {
@@ -87,6 +108,42 @@
       margin: 10px 0;
       opacity: 0;
       animation: typing 3s steps(40, end) forwards;
+      font-size: 1.2em;
+    }
+
+    .name-required-message {
+      color: #ff4444;
+      font-size: 2em;
+      margin: 25px 0;
+      text-align: center;
+      display: none;
+    }
+
+    .processing-screen {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-size: 2.5em;
+      color: #ff4444;
+      text-shadow: 0 0 10px rgba(255,0,0,0.5);
+      display: none;
+      width: 90vw;
+      max-width: 600px;
+      padding: 20px;
+      box-sizing: border-box;
+      word-wrap: break-word;
+    }
+
+    .spinner {
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     @keyframes typing {
@@ -94,47 +151,15 @@
       to { width: 100%; opacity: 1; }
     }
 
-    input {
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid #ff4444;
-      color: #ff4444;
-      font-family: 'Share Tech Mono', monospace;
-      text-align: center;
-      width: 300px;
-      padding: 5px;
-      caret-color: #ff4444;
-      animation: blink 1s infinite;
-    }
+    @media (max-width: 500px) {
+      .processing-screen {
+        font-size: 1.5em;
+      }
 
-    @keyframes blink {
-      0% { border-bottom-color: transparent; }
-      50% { border-bottom-color: #ff0000; }
-      100% { border-bottom-color: transparent; }
-    }
-
-    .processing-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      height: 100%;
-    }
-
-    .spinner {
-      color: #ff4444;
-      font-weight: bold;
-    }
-
-    .name-required {
-      font-size: 1.5em;
-      margin: 20px 0;
-      display: none;
-    }
-
-    .welcome-message {
-      margin-top: 20%;
-      font-size: 1.5em;
+      #main-input {
+        width: 80vw;
+        font-size: 1em;
+      }
     }
   </style>
 </head>
@@ -143,34 +168,19 @@
   <div class="version-glitch">Beta_build2.0</div>
 
   <div class="terminal">
-    <!-- Initial Screen -->
-    <div class="screen active-screen" id="initial-screen">
-      <div class="system-info">
-        <div class="typewriter" style="animation-delay: 0s">build: alpha1.7</div>
-        <div class="typewriter" style="animation-delay: 3s">name: test2</div>
-        <div class="typewriter" style="animation-delay: 6s">serial: 223994467</div>
-        <div class="typewriter" style="animation-delay: 9s">name: ???</div>
-      </div>
-      <div class="name-required">NAME REQUIRED</div>
-      <input type="text" id="main-input" class="hidden">
+    <div class="system-info">
+      <div class="typewriter" style="animation-delay: 0s">build: alpha1.7</div>
+      <div class="typewriter" style="animation-delay: 3s">name: test2</div>
+      <div class="typewriter" style="animation-delay: 6s">serial: 223994467</div>
+      <div class="typewriter" style="animation-delay: 9s">name: ???</div>
     </div>
+    <div class="name-required-message">NAME REQUIRED</div>
+    <input type="text" id="main-input" class="hidden">
+    <div id="response-container"></div>
+  </div>
 
-    <!-- Processing Screen -->
-    <div class="screen" id="processing-screen">
-      <div class="processing-container">
-        <span>PROCESSING</span>
-        <span class="spinner"></span>
-      </div>
-    </div>
-
-    <!-- Welcome Screen -->
-    <div class="screen" id="welcome-screen">
-      <div class="welcome-message">
-        <div>WELCOME BACK <span id="username-display"></span></div>
-        <div style="margin-top: 20px;">READY FOR ANOTHER TEST</div>
-        <input type="text" id="secondary-input" style="margin-top: 30px;">
-      </div>
-    </div>
+  <div class="processing-screen hidden">
+    PROCESSING <span class="spinner">|</span>
   </div>
 
   <script>
@@ -179,56 +189,57 @@
     });
 
     document.onkeydown = function(e) {
-      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || 
-          (e.ctrlKey && e.shiftKey && e.keyCode == 74) || (e.ctrlKey && e.keyCode == 85)) {
+      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.keyCode == 74) || (e.ctrlKey && e.keyCode == 85)) {
         return false;
       }
     };
 
-    const screens = {
-      initial: document.getElementById('initial-screen'),
-      processing: document.getElementById('processing-screen'),
-      welcome: document.getElementById('welcome-screen')
-    };
     const mainInput = document.getElementById('main-input');
-    const lastTypewriter = document.querySelector('.typewriter:last-child');
+    const responseContainer = document.getElementById('response-container');
+    const lastMessage = document.querySelector('.typewriter:last-child');
+    const nameRequired = document.querySelector('.name-required-message');
+    const terminal = document.querySelector('.terminal');
+    const processingScreen = document.querySelector('.processing-screen');
+    const spinner = document.querySelector('.spinner');
 
-    // Show name input after initial messages
-    lastTypewriter.addEventListener('animationend', () => {
-      document.querySelector('.name-required').style.display = 'block';
+    let userName = '';
+    let spinInterval;
+
+    lastMessage.addEventListener('animationend', () => {
       mainInput.classList.remove('hidden');
+      nameRequired.style.display = 'block';
       mainInput.focus();
     });
 
-    // Handle main input
     mainInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
-        const username = mainInput.value.trim();
-        if (username) {
-          // Switch to processing screen
-          screens.initial.classList.remove('active-screen');
-          screens.processing.classList.add('active-screen');
-          
-          // Start spinner animation
-          const spinnerFrames = ['\\', '/', '-', '|'];
-          let frame = 0;
-          const spinner = document.querySelector('.spinner');
-          const spinnerInterval = setInterval(() => {
-            spinner.textContent = spinnerFrames[frame];
-            frame = (frame + 1) % spinnerFrames.length;
-          }, 150);
-
-          // Switch to welcome screen after 3 seconds
-          setTimeout(() => {
-            clearInterval(spinnerInterval);
-            screens.processing.classList.remove('active-screen');
-            screens.welcome.classList.add('active-screen');
-            document.getElementById('username-display').textContent = username.toUpperCase();
-            document.getElementById('secondary-input').focus();
-          }, 3000);
+        const input = mainInput.value.trim();
+        if (input) {
+          userName = input;
+          terminal.classList.add('hidden');
+          processingScreen.classList.remove('hidden');
+          startSpinner();
+          simulateProcessing();
         }
       }
     });
+
+    function startSpinner() {
+      const chars = ['|', '/', '-', '\\'];
+      let index = 0;
+      spinInterval = setInterval(() => {
+        spinner.textContent = chars[index];
+        index = (index + 1) % chars.length;
+      }, 150);
+    }
+
+    function simulateProcessing() {
+      setTimeout(() => {
+        clearInterval(spinInterval);
+        processingScreen.classList.add('hidden');
+        // Add next step here (e.g., show new screen)
+      }, 3000);
+    }
   </script>
 </body>
 </html>
