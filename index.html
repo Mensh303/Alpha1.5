@@ -58,7 +58,7 @@
       padding: 5px;
       caret-color: #ff0000;
       animation: blink 1s infinite;
-      margin-top: 30px;
+      margin-top: 15px;
     }
 
     #main-input:focus {
@@ -109,23 +109,15 @@
       opacity: 0;
       animation: 
         typing 3s steps(40, end) forwards;
+      font-size: 1.2em;
     }
 
     .name-required-message {
-      color: #ff0000;
-      font-size: 2.5em;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      text-shadow: 0 0 20px rgba(255,0,0,0.7);
-      margin: 20px 0;
-      animation: glitch 1s infinite;
-      opacity: 0;
-      transition: opacity 0.5s;
-      display: block;
-    }
-
-    .name-required-message.visible {
-      opacity: 1;
+      color: #ff4444;
+      font-size: 2em;
+      margin: 25px 0;
+      text-align: center;
+      display: none;
     }
 
     @keyframes typing {
@@ -145,7 +137,7 @@
       <div class="typewriter" style="animation-delay: 6s">serial: 223994467</div>
       <div class="typewriter" style="animation-delay: 9s">name: ???</div>
     </div>
-    <div class="name-required-message hidden">NAME REQUIRED</div>
+    <div class="name-required-message">NAME REQUIRED</div>
     <input type="text" id="main-input" class="hidden">
     <div id="response-container"></div>
   </div>
@@ -164,12 +156,11 @@
     const mainInput = document.getElementById('main-input');
     const responseContainer = document.getElementById('response-container');
     const lastMessage = document.querySelector('.typewriter:last-child');
-    const nameRequiredMessage = document.querySelector('.name-required-message');
+    const nameRequired = document.querySelector('.name-required-message');
 
     lastMessage.addEventListener('animationend', () => {
       mainInput.classList.remove('hidden');
-      nameRequiredMessage.classList.remove('hidden');
-      nameRequiredMessage.classList.add('visible');
+      nameRequired.style.display = 'block';
       mainInput.focus();
     });
 
