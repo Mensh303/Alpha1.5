@@ -1,144 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Identity Verification</title>
-  <style>
-    /* Base Styling */
-    body {
-      margin: 0;
-      background: #000;
-      color: #ff2a6d;
-      font-family: 'Courier New', monospace;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      position: relative;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLITCH SYSTEM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-    /* Static Overlay */
-    .static-overlay {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.8),
-        rgba(0, 0, 0, 0.8) 1px,
-        transparent 1px,
-        transparent 2px
-      );
-      pointer-events: none;
-      z-index: 1;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Main Container */
-    .identity-gate {
-      position: relative;
-      z-index: 2;
-      border: 2px solid #ff2a6d;
-      padding: 2rem 4rem;
-      box-shadow: 0 0 20px rgba(255, 42, 109, 0.3);
-      text-align: center;
-    }
+        body {
+            background-color: #0a0000;
+            color: #ff4444;
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-    /* Input Field */
-    .neuro-input {
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid #ff2a6d;
-      color: #ff2a6d;
-      font-size: 1.2rem;
-      text-align: center;
-      margin-top: 1rem;
-      padding: 0.5rem;
-      width: 250px;
-      transition: all 0.3s ease;
-    }
+        .glitch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif'),
+                linear-gradient(45deg, rgba(255,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+            mix-blend-mode: screen;
+            opacity: 0.1;
+            pointer-events: none;
+        }
 
-    .neuro-input:focus {
-      outline: none;
-      border-bottom-color: #05d9e8;
-      box-shadow: 0 0 15px rgba(5, 217, 232, 0.3);
-    }
+        .terminal {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff0000;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 0 30px rgba(255,0,0,0.2);
+            position: relative;
+        }
 
-    /* Validation Message */
-    .validation-alert {
-      color: #ff2a6d;
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      letter-spacing: 2px;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
+        .system-messages {
+            margin-bottom: 2rem;
+        }
 
-    .validation-alert.active {
-      opacity: 1;
-      animation: glitch-text 0.5s infinite;
-    }
+        .glitch-text {
+            animation: glitch 2s infinite;
+            text-shadow: 2px 2px #800000;
+        }
 
-    /* Animations */
-    @keyframes glitch-text {
-      0% { text-shadow: 2px 2px #05d9e8; }
-      50% { text-shadow: -2px -2px #05d9e8; }
-      100% { text-shadow: 2px 2px #05d9e8; }
-    }
+        .typing-container {
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 1rem 0;
+        }
 
-    @keyframes scanline {
-      from { background-position: 0 0; }
-      to { background-position: 0 100%; }
-    }
-  </style>
+        .typing-effect {
+            display: inline-block;
+            animation: typing 3s steps(40, end) forwards;
+            opacity: 0;
+        }
+
+        @keyframes typing {
+            from { width: 0; opacity: 1; }
+            to { width: 100%; opacity: 1; }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .input-prompt {
+            border-bottom: 2px solid #ff0000;
+            padding: 0.5rem;
+            margin-top: 2rem;
+            display: inline-block;
+        }
+
+        #user-input {
+            background: transparent;
+            border: none;
+            color: #ff4444;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            width: 300px;
+            padding: 0.5rem;
+            caret-color: #ff0000;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { border-bottom-color: transparent; }
+        }
+
+        .processing-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .spinner {
+            animation: spin 0.5s linear infinite;
+            font-size: 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-  <div class="static-overlay"></div>
-  
-  <div class="identity-gate">
-    <div class="validation-alert">■ NAME REQUIRED ■</div>
-    <input type="text" class="neuro-input" placeholder="> ENTER IDENTITY <" autofocus>
-  </div>
+    <div class="glitch-overlay"></div>
+    
+    <div class="terminal">
+        <div class="system-messages">
+            <div class="typing-container">
+                <div class="typing-effect glitch-text" style="animation-delay: 0s">INITIALIZING SYSTEM...</div>
+            </div>
+            <div class="typing-container">
+                <div class="typing-effect glitch-text" style="animation-delay: 1.5s">CONNECTING TO NETWORK...</div>
+            </div>
+            <div class="typing-container">
+                <div class="typing-effect glitch-text" style="animation-delay: 3s">ACCESS CODE: ********</div>
+            </div>
+        </div>
 
-  <script>
-    const inputField = document.querySelector('.neuro-input');
-    const validationAlert = document.querySelector('.validation-alert');
+        <div class="input-prompt">
+            <input type="text" id="user-input" placeholder="ENTER ACCESS ID">
+        </div>
 
-    // Input Validation
-    inputField.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        if (inputField.value.trim() === '') {
-          validationAlert.classList.add('active');
-          setTimeout(() => validationAlert.classList.remove('active'), 1000);
-          inputField.style.borderBottomColor = '#ff2a6d';
-          inputField.style.animation = 'shake 0.5s';
-        } else {
-          // Proceed to next stage
-          inputField.style.display = 'none';
-          validationAlert.textContent = `■ WELCOME ${inputField.value.toUpperCase()} ■`;
-          validationAlert.style.color = '#05d9e8';
-          validationAlert.classList.add('active');
-          
-          // Add processing animation
-          setTimeout(() => {
-            document.body.innerHTML = `
-              <div class="processing">
-                <div class="scanline"></div>
-                <div class="progress-text">INITIALIZING NEURO-INTERFACE</div>
-              </div>
-            `;
-          }, 2000);
-        }
-      }
-    });
+        <div class="processing-screen" id="processing">
+            <div class="glitch-text">AUTHENTICATING</div>
+            <div class="spinner">|</div>
+        </div>
+    </div>
 
-    // Input Field Effects
-    inputField.addEventListener('input', () => {
-      inputField.style.borderBottomColor = 
-        inputField.value.length > 0 ? '#05d9e8' : '#ff2a6d';
-    });
-  </script>
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || 
+                (e.ctrlKey && e.shiftKey && e.keyCode == 74) || (e.ctrlKey && e.keyCode == 85)) {
+                return false;
+            }
+        };
+
+        const userInput = document.getElementById('user-input');
+        const processingScreen = document.getElementById('processing');
+        const spinner = document.querySelector('.spinner');
+        const spinnerChars = ['|', '/', '-', '\\'];
+        let spinnerIndex = 0;
+
+        // Handle input submission
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const input = userInput.value.trim();
+                if (input) {
+                    // Show processing screen
+                    processingScreen.style.display = 'flex';
+                    userInput.style.display = 'none';
+                    
+                    // Start spinner animation
+                    const spinnerInterval = setInterval(() => {
+                        spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
+                        spinner.textContent = spinnerChars[spinnerIndex];
+                    }, 100);
+
+                    // Simulate processing delay
+                    setTimeout(() => {
+                        clearInterval(spinnerInterval);
+                        processingScreen.style.display = 'none';
+                        // Add your next screen logic here
+                    }, 3000);
+                }
+            }
+        });
+    </script>
 </body>
 </html>
