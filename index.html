@@ -59,7 +59,6 @@
             color: #ff4444;
             text-shadow: 0 0 10px rgba(255,0,0,0.5);
             margin-bottom: 2rem;
-            animation: glitch 2s infinite;
         }
 
         .input-prompt {
@@ -99,13 +98,7 @@
         }
 
         .spinner {
-            animation: spin 0.5s linear infinite;
             font-size: 2rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         .welcome-screen {
@@ -117,16 +110,6 @@
         .welcome-message {
             font-size: 1.5em;
             margin-bottom: 2rem;
-            animation: glitch 2s infinite;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
         }
 
         .secondary-prompt {
@@ -142,13 +125,13 @@
         <div class="auth-screen" id="auth-screen">
             <div class="name-required">NAME REQUIRED</div>
             <div class="input-prompt">
-                <input type="text" id="name-input" placeholder="ENTER YOUR NAME" autofocus>
+                <input type="text" id="name-input" placeholder=">" autofocus>
             </div>
         </div>
 
         <!-- Processing Screen -->
         <div class="processing-screen" id="processing-screen">
-            <div class="glitch-text">VERIFYING IDENTITY</div>
+            <div>PROCESSING</div>
             <div class="spinner">|</div>
         </div>
 
@@ -158,7 +141,7 @@
                 WELCOME BACK <span id="username-display"></span>
             </div>
             <div class="secondary-prompt">
-                <input type="text" id="command-input" placeholder="ENTER COMMAND">
+                <input type="text" id="command-input" placeholder=">">
             </div>
         </div>
     </div>
@@ -186,17 +169,14 @@
             if (e.key === 'Enter') {
                 const userName = nameInput.value.trim();
                 if (userName) {
-                    // Switch to processing screen
                     authScreen.style.display = 'none';
                     processingScreen.style.display = 'flex';
                     
-                    // Start spinner animation
                     const spinnerInterval = setInterval(() => {
                         spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
                         spinner.textContent = spinnerChars[spinnerIndex];
                     }, 100);
 
-                    // Simulate processing and show welcome screen
                     setTimeout(() => {
                         clearInterval(spinnerInterval);
                         processingScreen.style.display = 'none';
