@@ -7,11 +7,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: #0a0000;
@@ -27,10 +23,7 @@
 
         .glitch-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: 
                 url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif'),
                 linear-gradient(45deg, rgba(255,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
@@ -119,6 +112,15 @@
         .secondary-prompt {
             margin-top: 2rem;
         }
+
+        .secret-screen {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+            font-size: 1.2em;
+            color: #ff6666;
+            line-height: 2;
+        }
     </style>
 </head>
 <body>
@@ -148,6 +150,11 @@
                 <input type="text" id="command-input">
             </div>
         </div>
+
+        <!-- Secret Screen -->
+        <div class="secret-screen" id="secret-screen">
+            ᚺᛁᛋ ᛖᚤᛖᛋ ᚹᛖᚱᛖ ᛖᛗᛈᛏᚤ , ᛒᚢᛏ ᛁ ᛞᛁᛞ ᚾᛟᛏ ᚴᚾᛟᚹ ᚨᚾᚤᛏᚺᛁᚾᚷ ᚨᛒᛟᚢᛏ ᚺᛁᛋ ᛋᛟᚢᛚ
+        </div>
     </div>
 
     <script>
@@ -162,6 +169,7 @@
         const authScreen = document.getElementById('auth-screen');
         const processingScreen = document.getElementById('processing-screen');
         const welcomeScreen = document.getElementById('welcome-screen');
+        const secretScreen = document.getElementById('secret-screen');
         const nameInput = document.getElementById('name-input');
         const usernameDisplay = document.getElementById('username-display');
         const commandInput = document.getElementById('command-input');
@@ -173,21 +181,26 @@
             if (e.key === 'Enter') {
                 const userName = nameInput.value.trim();
                 if (userName) {
-                    authScreen.style.display = 'none';
-                    processingScreen.style.display = 'flex';
-                    
-                    const spinnerInterval = setInterval(() => {
-                        spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
-                        spinner.textContent = spinnerChars[spinnerIndex];
-                    }, 100);
+                    if (userName === "empty") {
+                        authScreen.style.display = 'none';
+                        secretScreen.style.display = 'block';
+                    } else {
+                        authScreen.style.display = 'none';
+                        processingScreen.style.display = 'flex';
+                        
+                        const spinnerInterval = setInterval(() => {
+                            spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
+                            spinner.textContent = spinnerChars[spinnerIndex];
+                        }, 100);
 
-                    setTimeout(() => {
-                        clearInterval(spinnerInterval);
-                        processingScreen.style.display = 'none';
-                        welcomeScreen.style.display = 'block';
-                        usernameDisplay.textContent = userName.toUpperCase();
-                        commandInput.focus();
-                    }, 3000);
+                        setTimeout(() => {
+                            clearInterval(spinnerInterval);
+                            processingScreen.style.display = 'none';
+                            welcomeScreen.style.display = 'block';
+                            usernameDisplay.textContent = userName.toUpperCase();
+                            commandInput.focus();
+                        }, 3000);
+                    }
                 }
             }
         });
