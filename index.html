@@ -3,239 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEW BUILD</title>
+  <title>Identity Verification</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-
+    /* Base Styling */
     body {
       margin: 0;
-      background-color: #0a0000;
-      color: #ff4444;
-      font-family: 'Share Tech Mono', monospace;
+      background: #000;
+      color: #ff2a6d;
+      font-family: 'Courier New', monospace;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       overflow: hidden;
       position: relative;
     }
 
-    .terminal {
-      background: rgba(0, 0, 0, 0.9);
-      padding: 30px;
-      border: 2px solid #ff0000;
-      width: 90vw;
-      max-width: 600px;
-      box-shadow: 0 0 20px rgba(255,0,0,0.3);
-      text-align: center;
-      font-size: 1.2em;
-      overflow-y: auto;
-      max-height: 80vh;
-      position: relative;
-      box-sizing: border-box;
-    }
-
-    .version-glitch {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      color: #ff0000;
-      animation: glitch 1s infinite;
-      opacity: 0.8;
-      font-size: 0.9em;
-      text-shadow: 2px 2px #800000;
-    }
-
-    #main-input {
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid #ff0000;
-      color: #ff4444;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1.1em;
-      text-align: center;
-      width: 300px;
-      padding: 5px;
-      caret-color: #ff0000;
-      animation: blink 1s infinite;
-      margin-top: 15px;
-    }
-
-    #main-input:focus {
-      outline: none;
-    }
-
-    .static {
-      position: absolute;
-      top: 0;
-      left: 0;
+    /* Static Overlay */
+    .static-overlay {
+      position: fixed;
       width: 100%;
       height: 100%;
-      background: 
-          url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') repeat,
-          linear-gradient(0deg, rgba(255,0,0,0.1) 0%, rgba(255,0,0,0.3) 100%);
-      mix-blend-mode: screen;
-      opacity: 0.1;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.8),
+        rgba(0, 0, 0, 0.8) 1px,
+        transparent 1px,
+        transparent 2px
+      );
       pointer-events: none;
-      z-index: 0;
+      z-index: 1;
     }
 
-    @keyframes glitch {
-      0% { transform: translateX(0); text-shadow: 0 0 #ff0066, 0 0 #660000; }
-      50% { transform: translateX(-3px); text-shadow: -3px 0 #ff0066, 3px 0 #660000; }
-      100% { transform: translateX(0); text-shadow: 0 0 #ff0066, 0 0 #660000; }
+    /* Main Container */
+    .identity-gate {
+      position: relative;
+      z-index: 2;
+      border: 2px solid #ff2a6d;
+      padding: 2rem 4rem;
+      box-shadow: 0 0 20px rgba(255, 42, 109, 0.3);
+      text-align: center;
     }
 
-    @keyframes blink {
-      0% { border-bottom-color: transparent; }
-      50% { border-bottom-color: #ff0000; }
-      100% { border-bottom-color: transparent; }
+    /* Input Field */
+    .neuro-input {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #ff2a6d;
+      color: #ff2a6d;
+      font-size: 1.2rem;
+      text-align: center;
+      margin-top: 1rem;
+      padding: 0.5rem;
+      width: 250px;
+      transition: all 0.3s ease;
     }
 
-    .hidden {
-      display: none;
+    .neuro-input:focus {
+      outline: none;
+      border-bottom-color: #05d9e8;
+      box-shadow: 0 0 15px rgba(5, 217, 232, 0.3);
     }
 
-    .system-info {
-      text-align: left;
-      margin: 20px 0;
-      min-height: 100px;
-    }
-
-    .typewriter {
-      overflow: hidden;
-      white-space: nowrap;
-      margin: 10px 0;
+    /* Validation Message */
+    .validation-alert {
+      color: #ff2a6d;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      margin-bottom: 1.5rem;
       opacity: 0;
-      animation: typing 3s steps(40, end) forwards;
-      font-size: 1.2em;
+      transition: opacity 0.3s ease;
     }
 
-    .name-required-message {
-      color: #ff4444;
-      font-size: 2em;
-      margin: 25px 0;
-      text-align: center;
-      display: none;
+    .validation-alert.active {
+      opacity: 1;
+      animation: glitch-text 0.5s infinite;
     }
 
-    .processing-screen {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      font-size: 2.5em;
-      color: #ff4444;
-      text-shadow: 0 0 10px rgba(255,0,0,0.5);
-      display: none;
-      width: 90vw;
-      max-width: 600px;
-      padding: 20px;
-      box-sizing: border-box;
-      word-wrap: break-word;
-      z-index: 10;
+    /* Animations */
+    @keyframes glitch-text {
+      0% { text-shadow: 2px 2px #05d9e8; }
+      50% { text-shadow: -2px -2px #05d9e8; }
+      100% { text-shadow: 2px 2px #05d9e8; }
     }
 
-    .spinner {
-      display: inline-block;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    @keyframes typing {
-      from { width: 0; opacity: 1; }
-      to { width: 100%; opacity: 1; }
+    @keyframes scanline {
+      from { background-position: 0 0; }
+      to { background-position: 0 100%; }
     }
   </style>
 </head>
 <body>
-  <div class="static"></div>
-  <div class="version-glitch">Beta_build2.0</div>
-
-  <div class="terminal">
-    <div class="system-info">
-      <div class="typewriter" style="animation-delay: 0s">build: alpha1.7</div>
-      <div class="typewriter" style="animation-delay: 3s">name: test2</div>
-      <div class="typewriter" style="animation-delay: 6s">serial: 223994467</div>
-      <div class="typewriter" style="animation-delay: 9s">name: ???</div>
-    </div>
-    <div class="name-required-message">NAME REQUIRED</div>
-    <input type="text" id="main-input" class="hidden">
-    <div id="response-container"></div>
-  </div>
-
-  <div class="processing-screen hidden">
-    PROCESSING <span class="spinner">|</span>
+  <div class="static-overlay"></div>
+  
+  <div class="identity-gate">
+    <div class="validation-alert">■ NAME REQUIRED ■</div>
+    <input type="text" class="neuro-input" placeholder="> ENTER IDENTITY <" autofocus>
   </div>
 
   <script>
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
+    const inputField = document.querySelector('.neuro-input');
+    const validationAlert = document.querySelector('.validation-alert');
 
-    document.onkeydown = function(e) {
-      if (
-        e.keyCode == 123 ||
-        (e.ctrlKey && e.shiftKey && e.keyCode == 73) ||
-        (e.ctrlKey && e.shiftKey && e.keyCode == 74) ||
-        (e.ctrlKey && e.keyCode == 85)
-      ) {
-        return false;
-      }
-    };
-
-    const mainInput = document.getElementById('main-input');
-    const responseContainer = document.getElementById('response-container');
-    const lastMessage = document.querySelector('.typewriter:last-child');
-    const nameRequired = document.querySelector('.name-required-message');
-    const terminal = document.querySelector('.terminal');
-    const processingScreen = document.querySelector('.processing-screen');
-    const spinner = document.querySelector('.spinner');
-
-    let userName = '';
-    let spinInterval;
-
-    lastMessage.addEventListener('animationend', () => {
-      mainInput.classList.remove('hidden');
-      nameRequired.style.display = 'block';
-      mainInput.focus();
-    });
-
-    mainInput.addEventListener('keypress', (e) => {
+    // Input Validation
+    inputField.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
-        const input = mainInput.value.trim();
-        if (input) {
-          userName = input;
-          terminal.classList.add('hidden');
-          processingScreen.classList.remove('hidden');
-          startSpinner();
-          simulateProcessing();
+        if (inputField.value.trim() === '') {
+          validationAlert.classList.add('active');
+          setTimeout(() => validationAlert.classList.remove('active'), 1000);
+          inputField.style.borderBottomColor = '#ff2a6d';
+          inputField.style.animation = 'shake 0.5s';
+        } else {
+          // Proceed to next stage
+          inputField.style.display = 'none';
+          validationAlert.textContent = `■ WELCOME ${inputField.value.toUpperCase()} ■`;
+          validationAlert.style.color = '#05d9e8';
+          validationAlert.classList.add('active');
+          
+          // Add processing animation
+          setTimeout(() => {
+            document.body.innerHTML = `
+              <div class="processing">
+                <div class="scanline"></div>
+                <div class="progress-text">INITIALIZING NEURO-INTERFACE</div>
+              </div>
+            `;
+          }, 2000);
         }
       }
     });
 
-    function startSpinner() {
-      const chars = ['|', '/', '-', '\\'];
-      let index = 0;
-      spinInterval = setInterval(() => {
-        spinner.textContent = chars[index];
-        index = (index + 1) % chars.length;
-      }, 150);
-    }
-
-    function simulateProcessing() {
-      setTimeout(() => {
-        clearInterval(spinInterval);
-        processingScreen.classList.add('hidden');
-        // Next step goes here (e.g., redirect or show new screen)
-      }, 3000);
-    }
+    // Input Field Effects
+    inputField.addEventListener('input', () => {
+      inputField.style.borderBottomColor = 
+        inputField.value.length > 0 ? '#05d9e8' : '#ff2a6d';
+    });
   </script>
 </body>
 </html>
