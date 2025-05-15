@@ -16,8 +16,8 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 100vh; /* Fix applied */
-      overflow-x: hidden; /* Allow vertical scroll, restrict horizontal */
+      min-height: 100vh;
+      overflow: hidden;
       position: relative;
     }
 
@@ -30,8 +30,8 @@
       box-shadow: 0 0 20px rgba(255,0,0,0.3);
       text-align: center;
       font-size: 1.2em;
-      overflow-y: auto;
-      max-height: 80vh;
+      overflow-y: hidden; /* Fixed scroll bar */
+      max-height: none;   /* Allow natural height */
       position: relative;
     }
 
@@ -193,19 +193,23 @@
     const mainInput = document.getElementById('main-input');
     const lastTypewriter = document.querySelector('.typewriter:last-child');
 
+    // Show name input after initial messages
     lastTypewriter.addEventListener('animationend', () => {
       document.querySelector('.name-required').style.display = 'block';
       mainInput.classList.remove('hidden');
       mainInput.focus();
     });
 
+    // Handle main input
     mainInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         const username = mainInput.value.trim();
         if (username) {
+          // Switch to processing screen
           screens.initial.classList.remove('active-screen');
           screens.processing.classList.add('active-screen');
           
+          // Start spinner animation
           const spinnerFrames = ['\\', '/', '-', '|'];
           let frame = 0;
           const spinner = document.querySelector('.spinner');
@@ -214,6 +218,7 @@
             frame = (frame + 1) % spinnerFrames.length;
           }, 150);
 
+          // Switch to welcome screen after 3 seconds
           setTimeout(() => {
             clearInterval(spinnerInterval);
             screens.processing.classList.remove('active-screen');
