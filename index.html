@@ -115,10 +115,14 @@
       animation: glitch 1s infinite;
     }
     .end-screen {
-      font-size: 1.2em;
-      color: #aaaaaa;
-      line-height: 1.8;
-    }
+     display: none;
+    text-align: center;
+    font-size: 1.2em;
+    color: #ff4444;
+    text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 20px #ff0000;
+    padding: 2rem;
+    line-height: 1.8;
+}
     @keyframes glitch {
       0% { text-shadow: 0 0 10px rgba(0,255,0,0.5); }
       50% { text-shadow: 2px 2px 0 red, -2px -2px 0 blue; }
