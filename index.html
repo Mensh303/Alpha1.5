@@ -129,7 +129,6 @@
             box-shadow: 0 0 20px red;
         }
 
-        /* Added riddle screen style */
         .riddle-screen {
             font-size: 1.2em;
             color: #ff6666;
@@ -137,6 +136,10 @@
             text-align: center;
             padding: 2rem;
             display: none;
+        }
+
+        .riddle-answer-input {
+            margin-top: 2rem;
         }
     </style>
 </head>
@@ -176,7 +179,6 @@
             <img src="MJdoll.png" alt="MJdoll.png">
         </div>
 
-        <!-- Added riddle screen -->
         <div class="riddle-screen" id="riddle-screen">
             I AM THE SHADOW BEHIND SPOKEN BREATH,<br>
             A SILENT PACT WITH WHISPERED DEATH,<br>
@@ -184,6 +186,9 @@
             LOCKED BEHIND AN UNSEEN GATE,<br>
             I VANISH IF YOU DARE TO SPEAK,<br>
             WHAT AM I?
+            <div class="input-prompt riddle-answer-input">
+                <input type="text" id="riddle-answer" placeholder=">" autofocus>
+            </div>
         </div>
     </div>
 
@@ -205,6 +210,7 @@
         const nameInput = document.getElementById('name-input');
         const usernameDisplay = document.getElementById('username-display');
         const commandInput = document.getElementById('command-input');
+        const riddleAnswer = document.getElementById('riddle-answer');
         const spinner = document.querySelector('.spinner');
         const spinnerChars = ['|', '/', '-', '\\'];
         let spinnerIndex = 0;
@@ -246,6 +252,20 @@
                 } else if (response === 'yes') {
                     welcomeScreen.style.display = 'none';
                     riddleScreen.style.display = 'block';
+                    riddleAnswer.focus();
+                }
+            }
+        });
+
+        riddleAnswer.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const answer = riddleAnswer.value.trim().toLowerCase();
+                if (answer === 'secret' || answer === 'a secret') {
+                    riddleScreen.style.display = 'none';
+                    secretScreen.style.display = 'block';
+                } else {
+                    riddleScreen.style.display = 'none';
+                    scaryScreen.style.display = 'block';
                 }
             }
         });
