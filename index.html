@@ -42,7 +42,8 @@
             position: relative;
         }
 
-        .auth-screen, .welcome-screen, .secret-screen, .scary-screen, .riddle-screen {
+        .auth-screen, .welcome-screen, .secret-screen, .scary-screen, 
+        .riddle-screen, .riddle-secret-screen {
             text-align: center;
             padding: 2rem;
             display: none;
@@ -141,6 +142,19 @@
         .riddle-answer-input {
             margin-top: 2rem;
         }
+
+        .riddle-secret-screen {
+            font-size: 1.2em;
+            color: #ff6666;
+            line-height: 2;
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .secret-message {
+            text-shadow: 0 0 10px rgba(255,0,0,0.5);
+        }
     </style>
 </head>
 <body>
@@ -190,6 +204,15 @@
                 <input type="text" id="riddle-answer" placeholder=">" autofocus>
             </div>
         </div>
+
+        <div class="riddle-secret-screen" id="riddle-secret-screen">
+            <div class="secret-message">
+                Ị ŦⱤɄⱠɎ ₣ɆⱤ ₮ⱧɆ ₴Ɇ₵ⱤɆ₮ ⱧɆ₳Ɽ₮<br>
+                ɎɆ₮ ₮ⱧɆ ₥Ɏ₴₮ɆⱤɎ ₦ɆVɆⱤ ₴₱Ø₭Ɇ<br>
+                ₳ ₴łⱠɆ₦₮ ₩ł₦₦ł₦₲ ฿Ɇ₦Ɇ₳₮Ⱨ ɎØɄⱤ ɆɎɆ<br>
+                ₳₦ Ɇ₮ɆⱤ₦₳Ⱡ ₣Ⱡ₳₥Ɇ ɎØɄ ₵₳₦ ₦ɆVɆⱤ ɆⱤ₳₴Ɇ
+            </div>
+        </div>
     </div>
 
     <script>
@@ -207,6 +230,7 @@
         const secretScreen = document.getElementById('secret-screen');
         const scaryScreen = document.getElementById('scary-screen');
         const riddleScreen = document.getElementById('riddle-screen');
+        const riddleSecretScreen = document.getElementById('riddle-secret-screen');
         const nameInput = document.getElementById('name-input');
         const usernameDisplay = document.getElementById('username-display');
         const commandInput = document.getElementById('command-input');
@@ -262,7 +286,7 @@
                 const answer = riddleAnswer.value.trim().toLowerCase();
                 if (answer === 'secret' || answer === 'a secret') {
                     riddleScreen.style.display = 'none';
-                    secretScreen.style.display = 'block';
+                    riddleSecretScreen.style.display = 'block';
                 } else {
                     riddleScreen.style.display = 'none';
                     scaryScreen.style.display = 'block';
