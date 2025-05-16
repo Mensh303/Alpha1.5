@@ -43,7 +43,7 @@
         }
 
         .auth-screen, .welcome-screen, .secret-screen, .scary-screen, 
-        .riddle-screen, .riddle-secret-screen {
+        .riddle-screen, .audio-screen {
             text-align: center;
             padding: 2rem;
             display: none;
@@ -143,17 +143,17 @@
             margin-top: 2rem;
         }
 
-        .riddle-secret-screen {
-            font-size: 1.2em;
-            color: #ff6666;
-            line-height: 2;
-            text-align: center;
-            padding: 2rem;
-            display: none;
+        .audio-screen {
+            font-size: 2em;
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0,255,0,0.5);
+            animation: glitch 1s infinite;
         }
 
-        .secret-message {
-            text-shadow: 0 0 10px rgba(255,0,0,0.5);
+        @keyframes glitch {
+            0% { text-shadow: 0 0 10px rgba(0,255,0,0.5); }
+            50% { text-shadow: 2px 2px 0 red, -2px -2px 0 blue; }
+            100% { text-shadow: 0 0 10px rgba(0,255,0,0.5); }
         }
     </style>
 </head>
@@ -205,13 +205,8 @@
             </div>
         </div>
 
-        <div class="riddle-secret-screen" id="riddle-secret-screen">
-            <div class="secret-message">
-                Ị ŦⱤɄⱠɎ ₣ɆⱤ ₮ⱧɆ ₴Ɇ₵ⱤɆ₮ ⱧɆ₳Ɽ₮<br>
-                ɎɆ₮ ₮ⱧɆ ₥Ɏ₴₮ɆⱤɎ ₦ɆVɆⱤ ₴₱Ø₭Ɇ<br>
-                ₳ ₴łⱠɆ₦₮ ₩ł₦₦ł₦₲ ฿Ɇ₦Ɇ₳₮Ⱨ ɎØɄⱤ ɆɎɆ<br>
-                ₳₦ Ɇ₮ɆⱤ₦₳Ⱡ ₣Ⱡ₳₥Ɇ ɎØɄ ₵₳₦ ₦ɆVɆⱤ ɆⱤ₳₴Ɇ
-            </div>
+        <div class="audio-screen" id="audio-screen">
+            AUDIO_TAPE
         </div>
     </div>
 
@@ -230,7 +225,7 @@
         const secretScreen = document.getElementById('secret-screen');
         const scaryScreen = document.getElementById('scary-screen');
         const riddleScreen = document.getElementById('riddle-screen');
-        const riddleSecretScreen = document.getElementById('riddle-secret-screen');
+        const audioScreen = document.getElementById('audio-screen');
         const nameInput = document.getElementById('name-input');
         const usernameDisplay = document.getElementById('username-display');
         const commandInput = document.getElementById('command-input');
@@ -286,10 +281,9 @@
                 const answer = riddleAnswer.value.trim().toLowerCase();
                 if (answer === 'secret' || answer === 'a secret') {
                     riddleScreen.style.display = 'none';
-                    riddleSecretScreen.style.display = 'block';
+                    audioScreen.style.display = 'block';
                 } else {
-                    riddleScreen.style.display = 'none';
-                    scaryScreen.style.display = 'block';
+                    riddleAnswer.value = '';
                 }
             }
         });
