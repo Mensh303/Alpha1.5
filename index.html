@@ -1,221 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IDENTITY VERIFICATION</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDENTITY VERIFICATION</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      background-color: #0a0000;
-      color: #ff4444;
-      font-family: 'Share Tech Mono', monospace;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      position: relative;
-    }
+        body {
+            background-color: #0a0000;
+            color: #ff4444;
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-    .glitch-overlay {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: 
-        url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif'),
-        linear-gradient(45deg, rgba(255,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
-      mix-blend-mode: screen;
-      opacity: 0.1;
-      pointer-events: none;
-    }
+        .glitch-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif'),
+                linear-gradient(45deg, rgba(255,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+            mix-blend-mode: screen;
+            opacity: 0.1;
+            pointer-events: none;
+        }
 
-    .terminal {
-      background: rgba(0, 0, 0, 0.9);
-      border: 2px solid #ff0000;
-      padding: 2rem;
-      width: 90%;
-      max-width: 800px;
-      box-shadow: 0 0 30px rgba(255,0,0,0.2);
-      position: relative;
-    }
+        .terminal {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff0000;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 0 30px rgba(255,0,0,0.2);
+            position: relative;
+        }
 
-    .auth-screen,
-    .welcome-screen,
-    .processing-screen,
-    .secret-screen,
-    .scary-image-screen {
-      text-align: center;
-      padding: 2rem;
-      display: none;
-    }
+        .auth-screen, .welcome-screen, .secret-screen, .scary-screen {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
 
-    .name-required {
-      font-size: 1.5em;
-      color: #ff4444;
-      text-shadow: 0 0 10px rgba(255,0,0,0.5);
-      margin-bottom: 2rem;
-    }
+        .auth-screen { display: block; }
 
-    .input-prompt {
-      border-bottom: 2px solid #ff0000;
-      padding: 0.5rem;
-      margin-top: 2rem;
-      display: inline-block;
-    }
+        .name-required {
+            font-size: 1.5em;
+            color: #ff4444;
+            text-shadow: 0 0 10px rgba(255,0,0,0.5);
+            margin-bottom: 2rem;
+        }
 
-    input {
-      background: transparent;
-      border: none;
-      color: #ff4444;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1.2rem;
-      width: 300px;
-      padding: 0.5rem;
-      caret-color: #ff0000;
-      animation: blink 1s infinite;
-    }
+        .input-prompt {
+            border-bottom: 2px solid #ff0000;
+            padding: 0.5rem;
+            margin-top: 2rem;
+            display: inline-block;
+        }
 
-    @keyframes blink {
-      50% { border-bottom-color: transparent; }
-    }
+        input {
+            background: transparent;
+            border: none;
+            color: #ff4444;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            width: 300px;
+            padding: 0.5rem;
+            caret-color: #ff0000;
+            animation: blink 1s infinite;
+        }
 
-    ::placeholder {
-      color: transparent;
-    }
+        @keyframes blink {
+            50% { border-bottom-color: transparent; }
+        }
 
-    .spinner {
-      font-size: 2rem;
-    }
+        ::placeholder {
+            color: transparent;
+        }
 
-    .welcome-message {
-      font-size: 1.5em;
-      margin-bottom: 1rem;
-    }
+        .processing-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
 
-    .test-prompt {
-      font-size: 1.2em;
-      margin: 1rem 0;
-      color: #ff6666;
-    }
+        .spinner {
+            font-size: 2rem;
+        }
 
-    .secondary-prompt {
-      margin-top: 2rem;
-    }
+        .welcome-message {
+            font-size: 1.5em;
+            margin-bottom: 1rem;
+        }
 
-    .scary-image-screen img {
-      max-width: 100%;
-      height: auto;
-      box-shadow: 0 0 40px red;
-      border: 2px solid red;
-    }
-  </style>
+        .test-prompt {
+            font-size: 1.2em;
+            margin: 1rem 0;
+            color: #ff6666;
+        }
+
+        .secondary-prompt {
+            margin-top: 2rem;
+        }
+
+        .secret-screen {
+            font-size: 1.2em;
+            color: #ff6666;
+            line-height: 2;
+        }
+
+        .scary-screen img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid red;
+            box-shadow: 0 0 20px red;
+        }
+    </style>
 </head>
 <body>
-  <div class="glitch-overlay"></div>
-  
-  <div class="terminal">
-    <!-- Screen 1: Initial Input -->
-    <div class="auth-screen" id="auth-screen">
-      <div class="name-required">NAME REQUIRED</div>
-      <div class="input-prompt">
-        <input type="text" id="name-input" autofocus />
-      </div>
+    <div class="glitch-overlay"></div>
+    
+    <div class="terminal">
+        <div class="auth-screen" id="auth-screen">
+            <div class="name-required">NAME REQUIRED</div>
+            <div class="input-prompt">
+                <input type="text" id="name-input" autofocus>
+            </div>
+        </div>
+
+        <div class="processing-screen" id="processing-screen">
+            <div>PROCESSING</div>
+            <div class="spinner">|</div>
+        </div>
+
+        <div class="welcome-screen" id="welcome-screen">
+            <div class="welcome-message">
+                WELCOME BACK <span id="username-display"></span>
+            </div>
+            <div class="test-prompt">
+                READY FOR ANOTHER TEST?
+            </div>
+            <div class="secondary-prompt">
+                <input type="text" id="command-input">
+            </div>
+        </div>
+
+        <div class="secret-screen" id="secret-screen">
+            ᚺᛁᛋ ᛖᚤᛖᛋ ᚹᛖᚱᛖ ᛖᛗᛈᛏᚤ , ᛒᚢᛏ ᛁ ᛞᛁᛞ ᚾᛟᛏ ᚴᚾᛟᚹ ᚨᚾᚤᛏᚺᛁᚾᚷ ᚨᛒᛟᚢᛏ ᚺᛁᛋ ᛋᛟᚢᛚ
+        </div>
+
+        <div class="scary-screen" id="scary-screen">
+            <img src="dcd72d42-1b15-4721-8d8f-6565c62ff664.png" alt="Scary Image">
+        </div>
     </div>
 
-    <!-- Screen 2: Processing -->
-    <div class="processing-screen" id="processing-screen">
-      <div>PROCESSING</div>
-      <div class="spinner">|</div>
-    </div>
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = e => {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || 
+                (e.ctrlKey && e.shiftKey && e.keyCode == 74) || (e.ctrlKey && e.keyCode == 85)) {
+                return false;
+            }
+        };
 
-    <!-- Screen 3: Welcome & Prompt -->
-    <div class="welcome-screen" id="welcome-screen">
-      <div class="welcome-message">
-        WELCOME BACK <span id="username-display"></span>
-      </div>
-      <div class="test-prompt">READY FOR ANOTHER TEST?</div>
-      <div class="secondary-prompt">
-        <input type="text" id="command-input" />
-      </div>
-    </div>
+        const authScreen = document.getElementById('auth-screen');
+        const processingScreen = document.getElementById('processing-screen');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const secretScreen = document.getElementById('secret-screen');
+        const scaryScreen = document.getElementById('scary-screen');
+        const nameInput = document.getElementById('name-input');
+        const usernameDisplay = document.getElementById('username-display');
+        const commandInput = document.getElementById('command-input');
+        const spinner = document.querySelector('.spinner');
+        const spinnerChars = ['|', '/', '-', '\\'];
+        let spinnerIndex = 0;
 
-    <!-- Hidden Message Screen -->
-    <div class="secret-screen" id="secret-screen">
-      ᚺᛁᛋ ᛖᚤᛖᛋ ᚹᛖᚱᛖ ᛖᛗᛈᛏᚤ , ᛒᚢᛏ ᛁ ᛞᛁᛞ ᚾᛟᛏ ᚴᚾᛟᚹ ᚨᚾᚤᛏᚺᛁᚾᚷ ᚨᛒᛟᚢᛏ ᚺᛁᛋ ᛋᛟᚢᛚ
-    </div>
+        nameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const userName = nameInput.value.trim();
+                if (userName) {
+                    if (userName === "empty") {
+                        authScreen.style.display = 'none';
+                        secretScreen.style.display = 'block';
+                    } else {
+                        authScreen.style.display = 'none';
+                        processingScreen.style.display = 'flex';
+                        
+                        const spinnerInterval = setInterval(() => {
+                            spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
+                            spinner.textContent = spinnerChars[spinnerIndex];
+                        }, 100);
 
-    <!-- Scary Image Screen -->
-    <div class="scary-image-screen" id="scary-image-screen">
-      <img src="MJdoll.png" alt="Scary Image" />
-    </div>
-  </div>
+                        setTimeout(() => {
+                            clearInterval(spinnerInterval);
+                            processingScreen.style.display = 'none';
+                            welcomeScreen.style.display = 'block';
+                            usernameDisplay.textContent = userName.toUpperCase();
+                            commandInput.focus();
+                        }, 3000);
+                    }
+                }
+            }
+        });
 
-  <script>
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.onkeydown = e => {
-      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73) || 
-          (e.ctrlKey && e.shiftKey && e.keyCode == 74) || (e.ctrlKey && e.keyCode == 85)) {
-        return false;
-      }
-    };
-
-    const authScreen = document.getElementById('auth-screen');
-    const processingScreen = document.getElementById('processing-screen');
-    const welcomeScreen = document.getElementById('welcome-screen');
-    const secretScreen = document.getElementById('secret-screen');
-    const scaryImageScreen = document.getElementById('scary-image-screen');
-
-    const nameInput = document.getElementById('name-input');
-    const commandInput = document.getElementById('command-input');
-    const usernameDisplay = document.getElementById('username-display');
-    const spinner = document.querySelector('.spinner');
-    const spinnerChars = ['|', '/', '-', '\\'];
-    let spinnerIndex = 0;
-
-    // First input field listener
-    nameInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        const userName = nameInput.value.trim();
-        if (userName) {
-          if (userName === "empty") {
-            authScreen.style.display = 'none';
-            secretScreen.style.display = 'block';
-          } else {
-            authScreen.style.display = 'none';
-            processingScreen.style.display = 'flex';
-
-            const spinnerInterval = setInterval(() => {
-              spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
-              spinner.textContent = spinnerChars[spinnerIndex];
-            }, 100);
-
-            setTimeout(() => {
-              clearInterval(spinnerInterval);
-              processingScreen.style.display = 'none';
-              welcomeScreen.style.display = 'block';
-              usernameDisplay.textContent = userName.toUpperCase();
-              commandInput.focus();
-            }, 3000);
-          }
-        }
-      }
-    });
-
-    // Second input field listener
-    commandInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        const response = commandInput.value.trim().toLowerCase();
-        if (response === "no") {
-          welcomeScreen.style.display = 'none';
-          scaryImageScreen.style.display = 'block';
-        }
-      }
-    });
-  </script>
+        commandInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const response = commandInput.value.trim().toLowerCase();
+                if (response === 'no') {
+                    welcomeScreen.style.display = 'none';
+                    scaryScreen.style.display = 'block';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
