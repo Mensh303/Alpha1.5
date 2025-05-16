@@ -42,9 +42,10 @@
             position: relative;
         }
 
-        .auth-screen {
+        .auth-screen, .processing-screen, .welcome-screen, .secret-screen, .image-screen {
             text-align: center;
             padding: 2rem;
+            display: none;
         }
 
         .name-required {
@@ -98,12 +99,6 @@
             font-size: 2rem;
         }
 
-        .welcome-screen {
-            text-align: center;
-            padding: 2rem;
-            display: none;
-        }
-
         .welcome-message {
             font-size: 1.5em;
             margin-bottom: 1rem;
@@ -120,12 +115,31 @@
         }
 
         .secret-screen {
-            text-align: center;
-            padding: 2rem;
-            display: none;
             font-size: 1.2em;
             color: #ff6666;
             line-height: 2;
+        }
+
+        .image-screen img {
+            max-width: 100%;
+            height: auto;
+            border: 4px solid #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+        }
+
+        .back-button {
+            margin-top: 20px;
+            background: transparent;
+            border: 2px solid #ff0000;
+            color: #ff4444;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .back-button:hover {
+            background: #330000;
         }
     </style>
 </head>
@@ -133,7 +147,7 @@
     <div class="glitch-overlay"></div>
     
     <div class="terminal">
-        <div class="auth-screen" id="auth-screen">
+        <div class="auth-screen" id="auth-screen" style="display: block;">
             <div class="name-required">NAME REQUIRED</div>
             <div class="input-prompt">
                 <input type="text" id="name-input" autofocus>
@@ -160,6 +174,11 @@
         <div class="secret-screen" id="secret-screen">
             ᚺᛁᛋ ᛖᚤᛖᛋ ᚹᛖᚱᛖ ᛖᛗᛈᛏᚤ , ᛒᚢᛏ ᛁ ᛞᛁᛞ ᚾᛟᛏ ᚴᚾᛟᚹ ᚨᚾᚤᛏᚺᛁᚾᚷ ᚨᛒᛟᚢᛏ ᚺᛁᛋ ᛋᛟᚢᛚ
         </div>
+
+        <div class="image-screen" id="image-screen">
+            <img src="d14c4343-54c0-4ea7-8d5b-82ac6d89d9d9.png" alt="Scary Image">
+            <button class="back-button" onclick="goBack()">BACK</button>
+        </div>
     </div>
 
     <script>
@@ -175,6 +194,7 @@
         const processingScreen = document.getElementById('processing-screen');
         const welcomeScreen = document.getElementById('welcome-screen');
         const secretScreen = document.getElementById('secret-screen');
+        const imageScreen = document.getElementById('image-screen');
         const nameInput = document.getElementById('name-input');
         const usernameDisplay = document.getElementById('username-display');
         const commandInput = document.getElementById('command-input');
@@ -209,6 +229,23 @@
                 }
             }
         });
+
+        commandInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const command = commandInput.value.trim().toLowerCase();
+                if (command === 'no') {
+                    welcomeScreen.style.display = 'none';
+                    imageScreen.style.display = 'block';
+                }
+                // Add more logic here if needed
+            }
+        });
+
+        function goBack() {
+            imageScreen.style.display = 'none';
+            welcomeScreen.style.display = 'block';
+            commandInput.focus();
+        }
     </script>
 </body>
 </html>
