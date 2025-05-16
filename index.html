@@ -42,7 +42,7 @@
             position: relative;
         }
 
-        .auth-screen, .welcome-screen, .secret-screen, .scary-screen {
+        .auth-screen, .welcome-screen, .secret-screen, .scary-screen, .riddle-screen {
             text-align: center;
             padding: 2rem;
             display: none;
@@ -128,6 +128,16 @@
             border: 2px solid red;
             box-shadow: 0 0 20px red;
         }
+
+        /* Added riddle screen style */
+        .riddle-screen {
+            font-size: 1.2em;
+            color: #ff6666;
+            line-height: 1.5;
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -165,6 +175,16 @@
         <div class="scary-screen" id="scary-screen">
             <img src="MJdoll.png" alt="MJdoll.png">
         </div>
+
+        <!-- Added riddle screen -->
+        <div class="riddle-screen" id="riddle-screen">
+            I AM THE SHADOW BEHIND SPOKEN BREATH,<br>
+            A SILENT PACT WITH WHISPERED DEATH,<br>
+            I WEAR NO FORM, YET SHAPE YOUR FATE,<br>
+            LOCKED BEHIND AN UNSEEN GATE,<br>
+            I VANISH IF YOU DARE TO SPEAK,<br>
+            WHAT AM I?
+        </div>
     </div>
 
     <script>
@@ -181,6 +201,7 @@
         const welcomeScreen = document.getElementById('welcome-screen');
         const secretScreen = document.getElementById('secret-screen');
         const scaryScreen = document.getElementById('scary-screen');
+        const riddleScreen = document.getElementById('riddle-screen');
         const nameInput = document.getElementById('name-input');
         const usernameDisplay = document.getElementById('username-display');
         const commandInput = document.getElementById('command-input');
@@ -222,6 +243,9 @@
                 if (response === 'no') {
                     welcomeScreen.style.display = 'none';
                     scaryScreen.style.display = 'block';
+                } else if (response === 'yes') {
+                    welcomeScreen.style.display = 'none';
+                    riddleScreen.style.display = 'block';
                 }
             }
         });
